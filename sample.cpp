@@ -177,20 +177,21 @@ const int MS_PER_CYCLE = 10000;		// 10000 milliseconds = 10 seconds
 
 int		ActiveButton;			// current button that is down
 GLuint	AxesList;				// list to hold the axes
-int		AxesOn;					// != 0 means to draw the axes
-GLuint	BoxList;				// object display list
+int		AxesOn;				// != 0 means to draw the axes
+GLuint	BatmanList;			// object display list
+GLuint	LightSphere;
 int		DebugOn;				// != 0 means to print debugging info
-int		DepthCueOn;				// != 0 means to use intensity depth cueing
+int		DepthCueOn;			// != 0 means to use intensity depth cueing
 int		DepthBufferOn;			// != 0 means to use the z-buffer
 int		DepthFightingOn;		// != 0 means to force the creation of z-fighting
-int		MainWindow;				// window id for main graphics window
+int		MainWindow;			// window id for main graphics window
 int		NowColor;				// index into Colors[ ]
-int		NowProjection;		// ORTHO or PERSP
-float	Scale;					// scaling factor
-int		ShadowsOn;				// != 0 means to turn shadows on
-float	Time;					// used for animation, this has a value between 0. and 1.
-int		Xmouse, Ymouse;			// mouse values
-float	Xrot, Yrot;				// rotation angles in degrees
+int		NowProjection;			// ORTHO or PERSP
+float	Scale;				// scaling factor
+int		ShadowsOn;			// != 0 means to turn shadows on
+float	Time;				// used for animation, this has a value between 0. and 1.
+int		Xmouse, Ymouse;		// mouse values
+float	Xrot, Yrot;			// rotation angles in degrees
 
 
 // function prototypes:
@@ -270,14 +271,14 @@ MulArray3(float factor, float a, float b, float c )
 
 // these are here for when you need them -- just uncomment the ones you need:
 
-//#include "setmaterial.cpp"
-//#include "setlight.cpp"
-//#include "osusphere.cpp"
+#include "setmaterial.cpp"
+#include "setlight.cpp"
+#include "osusphere.cpp"
 //#include "osucone.cpp"
 //#include "osutorus.cpp"
 //#include "bmptotexture.cpp"
-//#include "loadobjfile.cpp"
-//#include "keytime.cpp"
+#include "loadobjfile.cpp"
+#include "keytime.cpp"
 //#include "glslprogram.cpp"
 
 
@@ -430,6 +431,10 @@ Display( )
 		glDisable( GL_FOG );
 	}
 
+	glEnable(GL_LIGHTING);
+
+	SetSpotLight(GL_LIGHT0, 0, 3, 0, 0, -1, 0, 1, 1, 1);
+
 	// possibly draw the axes:
 
 	if( AxesOn != 0 )
@@ -441,11 +446,14 @@ Display( )
 	// since we are using glScalef( ), be sure the normals get unitized:
 
 	glEnable( GL_NORMALIZE );
+	glShadeModel(GL_SMOOTH);
 
+	glEnable(GL_LIGHT0);
+	glTranslatef(0, 3, 0);
+	glCallList(LightSphere);
+	glTranslatef(0, -3, 0);
 
-	// draw the box object by calling up its display list:
-
-	glCallList( BoxList );
+	glCallList( BatmanList );
 
 #ifdef DEMO_Z_FIGHTING
 	if( DepthFightingOn != 0 )
@@ -825,56 +833,15 @@ InitLists( )
 
 	// create the object:
 
-	BoxList = glGenLists( 1 );
-	glNewList( BoxList, GL_COMPILE );
-
-		glBegin( GL_QUADS );
-
-			glColor3f( 1., 0., 0. );
-
-				glNormal3f( 1., 0., 0. );
-					glVertex3f(  dx, -dy,  dz );
-					glVertex3f(  dx, -dy, -dz );
-					glVertex3f(  dx,  dy, -dz );
-					glVertex3f(  dx,  dy,  dz );
-
-				glNormal3f(-1., 0., 0.);
-					glVertex3f( -dx, -dy,  dz);
-					glVertex3f( -dx,  dy,  dz );
-					glVertex3f( -dx,  dy, -dz );
-					glVertex3f( -dx, -dy, -dz );
-
-			glColor3f( 0., 1., 0. );
-
-				glNormal3f(0., 1., 0.);
-					glVertex3f( -dx,  dy,  dz );
-					glVertex3f(  dx,  dy,  dz );
-					glVertex3f(  dx,  dy, -dz );
-					glVertex3f( -dx,  dy, -dz );
-
-				glNormal3f(0., -1., 0.);
-					glVertex3f( -dx, -dy,  dz);
-					glVertex3f( -dx, -dy, -dz );
-					glVertex3f(  dx, -dy, -dz );
-					glVertex3f(  dx, -dy,  dz );
-
-			glColor3f(0., 0., 1.);
-
-				glNormal3f(0., 0., 1.);
-					glVertex3f(-dx, -dy, dz);
-					glVertex3f( dx, -dy, dz);
-					glVertex3f( dx,  dy, dz);
-					glVertex3f(-dx,  dy, dz);
-
-				glNormal3f(0., 0., -1.);
-					glVertex3f(-dx, -dy, -dz);
-					glVertex3f(-dx,  dy, -dz);
-					glVertex3f( dx,  dy, -dz);
-					glVertex3f( dx, -dy, -dz);
-
-		glEnd( );
-
+	BatmanList = glGenLists( 1 );
+	glNewList(BatmanList, GL_COMPILE);
+		LoadObjFile((char*)"batman.obj");
 	glEndList( );
+
+	LightSphere = glGenLists(1);
+	glNewList(LightSphere, GL_COMPILE);
+	OsuSphere(0.05, 20, 20);
+	glEndList();
 
 
 	// create the axes:

@@ -1,1 +1,4 @@
-﻿  Sample.vcxproj -> Y:\CS550\Sample2022\Debug\Sample.exe
+﻿  sample.cpp
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(843,12): warning C4305: 'argument': truncation from 'double' to 'float'
+sample.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
+  Sample.vcxproj -> C:\Users\jackh\Documents\School\CS 450\Project-4\Debug\Sample.exe
