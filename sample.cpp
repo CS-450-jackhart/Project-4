@@ -417,7 +417,7 @@ Display( )
 
 	// set the eye position, look-at position, and up-vector:
 
-	gluLookAt( Xpos_C.GetValue(nowTime), 2.f, 3, Xpos_b.GetValue(nowTime), 2, Zpos_b.GetValue(nowTime), 0.f, 1.f, 0.f);
+	gluLookAt( Xpos_C.GetValue(nowTime), 2.f, 3, Xpos_b.GetValue(nowTime), 2, Ypos_C.GetValue(nowTime), 0.f, 1.f, 0.f);
 
 	// rotate the scene:
 
