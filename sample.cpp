@@ -22,6 +22,8 @@
 #include <GL/glu.h>
 #include "glut.h"
 
+#include "keytime.h"
+
 
 //	This is a sample OpenGL / GLUT program
 //
@@ -87,6 +89,8 @@ const float SCROLL_WHEEL_CLICK_FACTOR = 5.f;
 const int LEFT   = 4;
 const int MIDDLE = 2;
 const int RIGHT  = 1;
+
+const int MSEC = 10000;
 
 // which projection:
 
@@ -193,6 +197,18 @@ float	Time;				// used for animation, this has a value between 0. and 1.
 int		Xmouse, Ymouse;		// mouse values
 float	Xrot, Yrot;			// rotation angles in degrees
 
+Keytimes Xpos_b;				// X position keytimes for batman
+Keytimes Ypos_b;
+Keytimes Zpos_b;
+
+Keytimes Rint_B;				// Red intensity for batman
+
+Keytimes Yrot_b;
+
+Keytimes Xrot_L;				// X rotation for light
+
+Keytimes Xpos_C;				// X rotation for camera/perspective
+Keytimes Ypos_C;
 
 // function prototypes:
 
@@ -339,10 +355,6 @@ Animate( )
 	ms %= MS_PER_CYCLE;							// makes the value of ms between 0 and MS_PER_CYCLE-1
 	Time = (float)ms / (float)MS_PER_CYCLE;		// makes the value of Time between 0. and slightly less than 1.
 
-	// for example, if you wanted to spin an object in Display( ), you might call: glRotatef( 360.f*Time,   0., 1., 0. );
-
-	// force a call to Display( ) next time it is convenient:
-
 	glutSetWindow( MainWindow );
 	glutPostRedisplay( );
 }
@@ -400,9 +412,12 @@ Display( )
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity( );
 
+	int msec = glutGet(GLUT_ELAPSED_TIME) % MSEC;
+	float nowTime = (float)msec / 1000.;
+
 	// set the eye position, look-at position, and up-vector:
 
-	gluLookAt( 0.f, 0.f, 3.f,     0.f, 0.f, 0.f,     0.f, 1.f, 0.f );
+	gluLookAt( Xpos_C.GetValue(nowTime), 2.f, 3, Xpos_b.GetValue(nowTime), 2, Zpos_b.GetValue(nowTime), 0.f, 1.f, 0.f);
 
 	// rotate the scene:
 
@@ -433,7 +448,10 @@ Display( )
 
 	glEnable(GL_LIGHTING);
 
-	SetSpotLight(GL_LIGHT0, 0, 3, 0, 0, -1, 0, 1, 1, 1);
+	glPushMatrix();
+		glTranslatef(0, Xrot_L.GetValue(nowTime), 0);
+		SetPointLight(GL_LIGHT0, 0, 0, 0, 1, 1, 1);
+	glPopMatrix();
 
 	// possibly draw the axes:
 
@@ -449,11 +467,18 @@ Display( )
 	glShadeModel(GL_SMOOTH);
 
 	glEnable(GL_LIGHT0);
-	glTranslatef(0, 3, 0);
-	glCallList(LightSphere);
-	glTranslatef(0, -3, 0);
 
+	glPushMatrix();
+		glTranslatef(0, Xrot_L.GetValue(nowTime), 0);
+		glCallList(LightSphere);
+	glPopMatrix();
+
+	glPushMatrix();
+		glTranslatef(Xpos_b.GetValue(nowTime), Ypos_b.GetValue(nowTime), Zpos_b.GetValue(nowTime));
+		glRotatef(Yrot_b.GetValue(nowTime), 0., 1., 0.);
+		SetMaterial(Rint_B.GetValue(nowTime), 0, 0, 0);
 	glCallList( BatmanList );
+	glPopMatrix();
 
 #ifdef DEMO_Z_FIGHTING
 	if( DepthFightingOn != 0 )
@@ -789,6 +814,34 @@ InitGraphics( )
 	glutTabletButtonFunc( NULL );
 	glutMenuStateFunc( NULL );
 	glutTimerFunc( -1, NULL, 0 );
+
+	Xpos_b.Init();
+	Yrot_b.Init();
+	Zpos_b.Init();
+	Rint_B.Init();
+	Xrot_L.Init();
+	Xpos_C.Init();
+	Ypos_C.Init();
+
+	for (int i = 0; i < 5; i++) {
+		Xpos_b.AddTimeValue((10. * ((float)i / 5.)), sin((F_2_PI * ((float)i / 5))));
+		Yrot_b.AddTimeValue((10. * ((float)i / 5.)), tan((F_2_PI * ((float)i / 5))) * 360);
+		Zpos_b.AddTimeValue((10. * ((float)i / 5.)), cos((F_2_PI * ((float)i / 5))));
+		Rint_B.AddTimeValue((10. * ((float)i / 5.)), tan((F_2_PI * ((float)i / 5))));
+
+		Xrot_L.AddTimeValue((10. * ((float)i / 5.)), (sin(((F_2_PI * ((float)i / 5)))) + 1) * 3);
+
+		Xpos_C.AddTimeValue((10. * ((float)i / 5.)), sin((F_2_PI * ((float)i / 5))));
+		Ypos_C.AddTimeValue((10. * ((float)i / 5.)), tan((F_2_PI * ((float)i / 5))));
+	}
+	
+	Xpos_b.AddTimeValue(10.0, 0.000);
+	Yrot_b.AddTimeValue(10.0, 0.000);
+	Zpos_b.AddTimeValue(10.0, 1.000);
+	Rint_B.AddTimeValue(10.0, 0.000);
+	Xrot_L.AddTimeValue(10.0, 0.000);
+	Xpos_C.AddTimeValue(10.0, 0.000);
+	Ypos_C.AddTimeValue(10.0, 0.000);
 
 	// setup glut to call Animate( ) every time it has
 	// 	nothing it needs to respond to (which is most of the time)

@@ -1,4 +1,19 @@
 ﻿  sample.cpp
-C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(843,12): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(416,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(827,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(827,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(828,79): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(828,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(829,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(829,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(830,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(830,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(832,87): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(832,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(834,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(834,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(835,51): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(835,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\jackh\Documents\School\CS 450\Project-4\sample.cpp(896,12): warning C4305: 'argument': truncation from 'double' to 'float'
 sample.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/INCREMENTAL:NO' specification
   Sample.vcxproj -> C:\Users\jackh\Documents\School\CS 450\Project-4\Debug\Sample.exe
